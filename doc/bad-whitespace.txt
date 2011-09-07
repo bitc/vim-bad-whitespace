@@ -3,7 +3,7 @@
 http://www.vim.org/scripts/script.php?script_id=3735
 
 Author:  Bit Connor <bit@mutantlemon.com>
-Version: 0.1
+Version: 0.2
 
 Get the latest version at:
 https://github.com/bitc/vim-bad-whitespace
