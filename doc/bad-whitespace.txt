@@ -1,5 +1,7 @@
 *bad-whitespace.txt*   Highlights whitespace at the end of lines
 
+http://www.vim.org/scripts/script.php?script_id=3735
+
 Author:  Bit Connor <bit@mutantlemon.com>
 Version: 0.1
 
