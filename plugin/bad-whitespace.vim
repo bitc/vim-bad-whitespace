@@ -6,8 +6,8 @@ function s:ShowBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 1
   endif
-  highlight BadWhitespace ctermbg=red guibg=red
-  autocmd ColorScheme <buffer> highlight BadWhitespace ctermbg=red guibg=red
+  highlight default BadWhitespace ctermbg=red guibg=red
+  autocmd ColorScheme <buffer> highlight default BadWhitespace ctermbg=red guibg=red
   match BadWhitespace /\s\+$/
   autocmd InsertLeave <buffer> match BadWhitespace /\s\+$/
   autocmd InsertEnter <buffer> match BadWhitespace /\s\+\%#\@<!$/
