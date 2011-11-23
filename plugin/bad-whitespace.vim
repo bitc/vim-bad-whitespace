@@ -2,7 +2,7 @@
 " Maintainer:   Bit Connor <bit@mutantlemon.com>
 " Version:      0.2
 
-function s:ShowBadWhitespace(force)
+function! s:ShowBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 1
   endif
@@ -13,14 +13,14 @@ function s:ShowBadWhitespace(force)
   autocmd InsertEnter <buffer> match BadWhitespace /\s\+\%#\@<!$/
 endfunction
 
-function s:HideBadWhitespace(force)
+function! s:HideBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 0
   endif
   match none BadWhitespace
 endfunction
 
-function s:EnableShowBadWhitespace()
+function! s:EnableShowBadWhitespace()
   if exists("b:bad_whitespace_show")
     return
   endif
@@ -31,7 +31,7 @@ function s:EnableShowBadWhitespace()
   endif
 endfunction
 
-function s:ToggleBadWhitespace()
+function! s:ToggleBadWhitespace()
   if !exists("b:bad_whitespace_show")
     let b:bad_whitespace_show = 0
     if &modifiable
@@ -47,14 +47,14 @@ endfunction
 
 autocmd BufWinEnter,WinEnter,FileType * call <SID>EnableShowBadWhitespace()
 
-function s:EraseBadWhitespace(line1,line2)
+function! s:EraseBadWhitespace(line1,line2)
   let l:save_cursor = getpos(".")
   silent! execute ':' . a:line1 . ',' . a:line2 . 's/\s\+$//'
   call setpos('.', l:save_cursor)
 endfunction
 
 " Run :EraseBadWhitespace to remove end of line white space.
-command -range=% EraseBadWhitespace call <SID>EraseBadWhitespace(<line1>,<line2>)
-command ShowBadWhitespace call <SID>ShowBadWhitespace(1)
-command HideBadWhitespace call <SID>HideBadWhitespace(1)
-command ToggleBadWhitespace call <SID>ToggleBadWhitespace()
+command! -range=% EraseBadWhitespace call <SID>EraseBadWhitespace(<line1>,<line2>)
+command! ShowBadWhitespace call <SID>ShowBadWhitespace(1)
+command! HideBadWhitespace call <SID>HideBadWhitespace(1)
+command! ToggleBadWhitespace call <SID>ToggleBadWhitespace()
