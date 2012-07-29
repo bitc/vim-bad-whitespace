@@ -1,6 +1,6 @@
 " bad-whitespace.vim - Highlights whitespace at the end of lines
 " Maintainer:   Bit Connor <bit@mutantlemon.com>
-" Version:      0.2
+" Version:      0.3
 
 function! s:ShowBadWhitespace(force)
   if a:force
