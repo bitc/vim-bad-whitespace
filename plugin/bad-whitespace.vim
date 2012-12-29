@@ -8,9 +8,9 @@ function! s:ShowBadWhitespace(force)
   endif
   highlight default BadWhitespace ctermbg=red guibg=red
   autocmd ColorScheme <buffer> highlight default BadWhitespace ctermbg=red guibg=red
-  match BadWhitespace /\s\+$/
-  autocmd InsertLeave <buffer> match BadWhitespace /\s\+$/
-  autocmd InsertEnter <buffer> match BadWhitespace /\s\+\%#\@<!$/
+  match BadWhitespace /\(\s\+$\)\|\(^\s*\zs\%$\)\|\(\n\zs\(\n\|\s\)\+\%$\)/
+  autocmd InsertLeave <buffer> match BadWhitespace /\(^\s*\zs\%$\)\|\(\s\+$\)\|\(\n\zs\(\n\|\s\)\+\%$\)/
+  autocmd InsertEnter <buffer> match BadWhitespace /\(\s\+\%#\@<!$\)\|\(^\s*\zs\%$\)\|\(\n\zs\(\n\|\s\)\+\%$\)/
 endfunction
 
 function! s:HideBadWhitespace(force)
