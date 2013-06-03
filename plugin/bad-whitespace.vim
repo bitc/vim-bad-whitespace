@@ -2,11 +2,18 @@
 " Maintainer:   Bit Connor <bit@mutantlemon.com>
 " Version:      0.3
 
+if exists('loaded_bad_whitespace')
+    finish
+endif
+let loaded_bad_whitespace = 1
+
+highlight default BadWhitespace ctermbg=red guibg=red
+autocmd BufWinEnter,WinEnter,FileType * call <SID>EnableShowBadWhitespace()
+
 function! s:ShowBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 1
   endif
-  highlight default BadWhitespace ctermbg=red guibg=red
   autocmd ColorScheme <buffer> highlight default BadWhitespace ctermbg=red guibg=red
   match BadWhitespace /\s\+$/
   autocmd InsertLeave <buffer> match BadWhitespace /\s\+$/
@@ -44,8 +51,6 @@ function! s:ToggleBadWhitespace()
     call <SID>ShowBadWhitespace(1)
   endif
 endfunction
-
-autocmd BufWinEnter,WinEnter,FileType * call <SID>EnableShowBadWhitespace()
 
 function! s:EraseBadWhitespace(line1,line2)
   let l:save_cursor = getpos(".")
