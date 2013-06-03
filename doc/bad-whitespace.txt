@@ -51,4 +51,12 @@ Disables bad whitespace highlighting for the current buffer.
 
 Toggles bad whitespace highlighting for the current buffer.
 
+Configuration~                              *g:bad_whitespace_patch_filetypes*
+
+You can suppress highlighting of the first (and second in case of a combined
+diff) column for selected filetypes, by setting the following variable.  The
+given value is the default: >
+    let g:bad_whitespace_patch_filetypes = ['diff', 'git']
+<
+
  vim:tw=78:et:ft=help:
