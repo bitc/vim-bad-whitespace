@@ -7,18 +7,23 @@ if exists('loaded_bad_whitespace')
 endif
 let loaded_bad_whitespace = 1
 
-highlight default BadWhitespace ctermbg=red guibg=red
-autocmd BufWinEnter,WinEnter,FileType * call <SID>EnableShowBadWhitespace()
-
 if ! exists( "g:bad_whitespace_patch_filetypes" )
     let g:bad_whitespace_patch_filetypes = ['diff', 'git']
 endif
+
+if ! exists( "g:bad_whitespace_color_default" )
+    highlight default BadWhitespaceDefaultState ctermbg=red guibg=red
+    let g:bad_whitespace_color_default = 'BadWhitespaceDefaultState'
+endif
+
+execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
+autocmd BufWinEnter,WinEnter,FileType * call <SID>EnableShowBadWhitespace()
 
 function! s:ShowBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 1
   endif
-  autocmd ColorScheme <buffer> highlight default BadWhitespace ctermbg=red guibg=red
+  autocmd ColorScheme <buffer> execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
   if exists('b:bad_whitespace_buffer_pattern_prefix')
       let l:pattern_prefix = b:bad_whitespace_buffer_pattern_prefix
   else
