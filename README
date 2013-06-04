@@ -33,5 +33,5 @@ highlighting in buffers that are not modifiable, which is usually what you
 want. This makes it compatible with UI buffers that happen to contain bad
 whitespace, such as the quickfix window, or the fugitive plugin.
 
-This plugin can optionally suppress highlighting the the first two columns of a
+This plugin can optionally suppress highlighting in the +/- columns of a
 patch in unified diff format.

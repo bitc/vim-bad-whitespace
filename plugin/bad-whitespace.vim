@@ -41,10 +41,14 @@ function! s:SetBufferSpecificWhitespacePattern()
   if empty(l:patch_filtypes)
     return
   endif
-  let l:start_colum = 2
-  if search('^@@@ ', 'nw')
-      let l:start_colum = 3
+  let l:save_cursor = getpos(".")
+  let l:start_colum = 0
+  if search('^@\+', 'we')
+      let l:start_colum = col('.')
+  else
+      echomsg "bad-whitespace: could not find a sequence of @ characters"
   endif
+  call setpos('.', l:save_cursor)
   let b:bad_whitespace_buffer_pattern_prefix = '/\%' . l:start_colum . 'c.\{-\}\zs\s\+\ze'
 endfunction
 

@@ -53,9 +53,10 @@ Toggles bad whitespace highlighting for the current buffer.
 
 Configuration~                              *g:bad_whitespace_patch_filetypes*
 
-You can suppress highlighting of the first (and second in case of a combined
-diff) column for selected filetypes, by setting the following variable.  The
-given value is the default: >
+You can suppress highlighting of the +/- columns in patch filetypes, by setting
+the variable 'g:bad_whitespace_patch_filetypes'.  The column width is derived
+from the number fo '@' characters introducing the hunk header.  The given value
+in this example is the default: >
     let g:bad_whitespace_patch_filetypes = ['diff', 'git']
 <
 
