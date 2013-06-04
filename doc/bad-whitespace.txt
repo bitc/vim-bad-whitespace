@@ -51,6 +51,14 @@ Disables bad whitespace highlighting for the current buffer.
 
 Toggles bad whitespace highlighting for the current buffer.
 
+                                            *SetSearchPatternToBadWhitespace *
+
+Write the bad-whitespace pattern for the current buffer to the last search
+pattern register.  This way you can jump to an error by creating a mapping
+like this: >
+    nnoremap <Leader>W :<C-U>SetSearchPatternToBadWhitespace<CR>n
+<
+
 Configuration~                              *g:bad_whitespace_patch_filetypes*
 
 You can suppress highlighting of the +/- columns in patch filetypes, by setting

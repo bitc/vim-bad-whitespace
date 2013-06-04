@@ -30,16 +30,26 @@ function! s:ShowBadWhitespace(force)
     let b:bad_whitespace_show = 1
   endif
   autocmd ColorScheme <buffer> execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
-  if exists('b:bad_whitespace_buffer_pattern_prefix')
-      let l:pattern_prefix = b:bad_whitespace_buffer_pattern_prefix
-  else
-      let l:pattern_prefix = '/\s\+'
-  endif
-  let l:whitespace_pattern_global = l:pattern_prefix . '$/'
-  let l:whitespace_pattern_editing = l:pattern_prefix . '\%#\@<!$/'
+  let l:whitespace_pattern_global = '/' . s:GetBadWhitespacePattern(0) . '/'
+  let l:whitespace_pattern_editing = '/' . s:GetBadWhitespacePattern(1) . '/'
   execute 'match BadWhitespace ' . l:whitespace_pattern_global
   execute 'autocmd InsertLeave <buffer> match BadWhitespace ' . l:whitespace_pattern_global
   execute 'autocmd InsertEnter <buffer> match BadWhitespace ' . l:whitespace_pattern_editing
+endfunction
+
+function! s:GetBadWhitespacePattern(want_editing_pattern)
+  " Return the bad-whitespace pattern for the current buffer.  If
+  " want_editing_pattern is nonzero return the pattern for insert mode.
+  if exists('b:bad_whitespace_buffer_pattern_prefix')
+      let l:pattern_prefix = b:bad_whitespace_buffer_pattern_prefix
+  else
+      let l:pattern_prefix = '\s\+'
+  endif
+  if a:want_editing_pattern
+      return l:pattern_prefix . '\%#\@<!$'
+  else
+      return l:pattern_prefix . '$'
+  endif
 endfunction
 
 function! s:SetBufferSpecificWhitespacePattern()
@@ -57,7 +67,7 @@ function! s:SetBufferSpecificWhitespacePattern()
                   \ . g:bad_whitespace_patch_column_width_fallback
   endif
   call setpos('.', l:save_cursor)
-  let b:bad_whitespace_buffer_pattern_prefix = '/\%' . l:start_colum . 'c.\{-\}\zs\s\+\ze'
+  let b:bad_whitespace_buffer_pattern_prefix = '\%' . l:start_colum . 'c.\{-\}\zs\s\+\ze'
 endfunction
 
 function! s:HideBadWhitespace(force)
@@ -104,3 +114,4 @@ command! -range=% EraseBadWhitespace call <SID>EraseBadWhitespace(<line1>,<line2
 command! ShowBadWhitespace call <SID>ShowBadWhitespace(1)
 command! HideBadWhitespace call <SID>HideBadWhitespace(1)
 command! ToggleBadWhitespace call <SID>ToggleBadWhitespace()
+command! SetSearchPatternToBadWhitespace let @/ = <SID>GetBadWhitespacePattern(0)
