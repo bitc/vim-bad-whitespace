@@ -105,7 +105,8 @@ endfunction
 
 function! s:EraseBadWhitespace(line1,line2)
   let l:save_cursor = getpos(".")
-  silent! execute ':' . a:line1 . ',' . a:line2 . 's/\s\+$//'
+  silent! execute ':' . a:line1 . ',' . a:line2
+              \ . 's/' . s:GetBadWhitespacePattern(0) . '//'
   call setpos('.', l:save_cursor)
 endfunction
 
