@@ -59,5 +59,9 @@ from the number fo '@' characters introducing the hunk header.  The given value
 in this example is the default: >
     let g:bad_whitespace_patch_filetypes = ['diff', 'git']
 <
+                                *g:bad_whitespace_patch_column_width_fallback*
+
+If the +/- column width could not be derived from the hunk header, this value
+will be used.  The default is 0.
 
  vim:tw=78:et:ft=help:

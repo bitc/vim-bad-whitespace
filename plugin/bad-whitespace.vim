@@ -11,6 +11,12 @@ if ! exists( "g:bad_whitespace_patch_filetypes" )
     let g:bad_whitespace_patch_filetypes = ['diff', 'git']
 endif
 
+if ! exists( "g:bad_whitespace_patch_column_width_fallback" )
+    " If the column width could not be derived from the hunk header, use this
+    " value as a fallback.
+    let g:bad_whitespace_patch_column_width_fallback = 0
+endif
+
 if ! exists( "g:bad_whitespace_color_default" )
     highlight default BadWhitespaceDefaultState ctermbg=red guibg=red
     let g:bad_whitespace_color_default = 'BadWhitespaceDefaultState'
@@ -42,11 +48,13 @@ function! s:SetBufferSpecificWhitespacePattern()
     return
   endif
   let l:save_cursor = getpos(".")
-  let l:start_colum = 0
   if search('^@\+', 'we')
       let l:start_colum = col('.')
   else
-      echomsg "bad-whitespace: could not find a sequence of @ characters"
+      let l:start_colum = g:bad_whitespace_patch_column_width_fallback + 1
+      echomsg "bad-whitespace: could not find a sequence of @ characters. "
+                  \ . "Will use fallback +/- column width "
+                  \ . g:bad_whitespace_patch_column_width_fallback
   endif
   call setpos('.', l:save_cursor)
   let b:bad_whitespace_buffer_pattern_prefix = '/\%' . l:start_colum . 'c.\{-\}\zs\s\+\ze'
