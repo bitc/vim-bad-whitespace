@@ -83,7 +83,7 @@ endfunction
 function! s:TurnOffBadWhitespaceForConfiguredFiletypes()
   let l:off_filtypes = filter(copy(g:bad_whitespace_off_filetypes), 'v:val == &ft')
   if !empty(l:off_filtypes)
-      let b:bad_whitespace_show = 0
+      call s:HideBadWhitespace(1)
   endif
 endfun
 
@@ -99,7 +99,6 @@ endfunction
 
 function! s:EnableShowBadWhitespace()
   call s:SetBufferSpecificPatternPrefix()
-  call s:TurnOffBadWhitespaceForConfiguredFiletypes()
   if exists("b:bad_whitespace_show")
     return
   endif
@@ -108,6 +107,7 @@ function! s:EnableShowBadWhitespace()
   else
     call <SID>HideBadWhitespace(0)
   endif
+  call s:TurnOffBadWhitespaceForConfiguredFiletypes()
 endfunction
 
 function! s:ToggleBadWhitespace()
