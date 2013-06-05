@@ -82,6 +82,13 @@ Example: >
     let g:bad_whitespace_off_filetypes = ['text', 'markdown']
 <
 
+                                              *g:bad_whitespace_color_default*
+
+Specify the name of a color to be used for bad whitespace highlighting.  The
+default uses a red background.  Example: >
+    let g:bad_whitespace_color_default = 'Error'
+<
+
                                           *g:bad_whitespace_color_alt_default*
 
 Specify the name of a color to be used for the alternative bad whitespace
