@@ -11,6 +11,10 @@ if ! exists( "g:bad_whitespace_patch_filetypes" )
     let g:bad_whitespace_patch_filetypes = ['diff', 'git']
 endif
 
+if ! exists( "g:bad_whitespace_off_filetypes" )
+    let g:bad_whitespace_off_filetypes = []
+endif
+
 if ! exists( "g:bad_whitespace_patch_column_width_fallback" )
     " If the column width could not be derived from the hunk header, use this
     " value as a fallback.
@@ -73,6 +77,13 @@ function! s:SetBufferSpecificPatternPrefix()
   endif
 endfunction
 
+function! s:TurnOffBadWhitespaceForConfiguredFiletypes()
+  let l:off_filtypes = filter(copy(g:bad_whitespace_off_filetypes), 'v:val == &ft')
+  if !empty(l:off_filtypes)
+      let b:bad_whitespace_show = 0
+  endif
+endfun
+
 function! s:HideBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 0
@@ -81,10 +92,11 @@ function! s:HideBadWhitespace(force)
 endfunction
 
 function! s:EnableShowBadWhitespace()
+  call s:SetBufferSpecificPatternPrefix()
+  call s:TurnOffBadWhitespaceForConfiguredFiletypes()
   if exists("b:bad_whitespace_show")
     return
   endif
-  call s:SetBufferSpecificPatternPrefix()
   if &modifiable
     call <SID>ShowBadWhitespace(0)
   else
