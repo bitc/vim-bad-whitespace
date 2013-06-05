@@ -37,8 +37,10 @@ function! s:ShowBadWhitespace(force)
   let l:whitespace_pattern_global = '/' . s:GetBadWhitespacePattern(0) . '/'
   let l:whitespace_pattern_editing = '/' . s:GetBadWhitespacePattern(1) . '/'
   execute 'match BadWhitespace ' . l:whitespace_pattern_global
-  execute 'autocmd InsertLeave <buffer> match BadWhitespace ' . l:whitespace_pattern_global
-  execute 'autocmd InsertEnter <buffer> match BadWhitespace ' . l:whitespace_pattern_editing
+  augroup BadWhitespace
+    execute 'autocmd InsertLeave <buffer> match BadWhitespace ' . l:whitespace_pattern_global
+    execute 'autocmd InsertEnter <buffer> match BadWhitespace ' . l:whitespace_pattern_editing
+  augroup END
 endfunction
 
 function! s:GetBadWhitespacePattern(want_editing_pattern)
@@ -89,6 +91,9 @@ function! s:HideBadWhitespace(force)
     let b:bad_whitespace_show = 0
   endif
   match none BadWhitespace
+  augroup BadWhitespace
+    autocmd!
+  augroup END
 endfunction
 
 function! s:EnableShowBadWhitespace()
