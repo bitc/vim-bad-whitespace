@@ -36,11 +36,14 @@ if ! exists( "g:bad_whitespace_color_alt_default" )
 endif
 
 execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
-execute 'highlight link BadWhitespaceAlternative ' . g:bad_whitespace_color_alt_default
+execute 'highlight link BadWhitespaceAlternative '
+            \ . g:bad_whitespace_color_alt_default
 autocmd BufWinEnter,WinEnter,FileType * call <SID>EnableShowBadWhitespace()
 
 function! s:IsAlternativeColorFiletype()
-  let l:alt_filtypes = filter(copy(g:bad_whitespace_alternative_color_filetypes), 'v:val == &ft')
+  let l:alt_filtypes = filter(
+              \ copy(g:bad_whitespace_alternative_color_filetypes),
+              \ 'v:val == &ft')
   if empty(l:alt_filtypes)
       return 0
   else
@@ -52,8 +55,11 @@ function! s:ShowBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 1
   endif
-  autocmd ColorScheme <buffer> execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
-  autocmd ColorScheme <buffer> execute 'highlight link BadWhitespaceAlternative ' . g:bad_whitespace_color_alt_default
+  autocmd ColorScheme <buffer> execute 'highlight link BadWhitespace '
+              \ . g:bad_whitespace_color_default
+  autocmd ColorScheme <buffer>
+              \ execute 'highlight link BadWhitespaceAlternative '
+              \ . g:bad_whitespace_color_alt_default
   let l:whitespace_pattern_global = '/' . s:GetBadWhitespacePattern(0) . '/'
   let l:whitespace_pattern_editing = '/' . s:GetBadWhitespacePattern(1) . '/'
   if s:IsAlternativeColorFiletype()
@@ -66,8 +72,10 @@ function! s:ShowBadWhitespace(force)
   execute 'match ' . l:active_colorscheme . ' ' . l:whitespace_pattern_global
   augroup BadWhitespace
     autocmd! * <buffer>
-    execute 'autocmd InsertLeave <buffer> match ' . l:active_colorscheme . ' ' . l:whitespace_pattern_global
-    execute 'autocmd InsertEnter <buffer> match ' . l:active_colorscheme . ' ' . l:whitespace_pattern_editing
+    execute 'autocmd InsertLeave <buffer> match ' . l:active_colorscheme
+                \ . ' ' . l:whitespace_pattern_global
+    execute 'autocmd InsertEnter <buffer> match ' . l:active_colorscheme
+                \ . ' ' . l:whitespace_pattern_editing
   augroup END
 endfunction
 
@@ -101,14 +109,16 @@ function! s:GetPatternPrefixForPatches()
 endfunction
 
 function! s:SetBufferSpecificPatternPrefix()
-  let l:patch_filtypes = filter(copy(g:bad_whitespace_patch_filetypes), 'v:val == &ft')
+  let l:patch_filtypes = filter(copy(g:bad_whitespace_patch_filetypes),
+              \ 'v:val == &ft')
   if !empty(l:patch_filtypes)
     let b:bad_whitespace_buffer_pattern_prefix = s:GetPatternPrefixForPatches()
   endif
 endfunction
 
 function! s:TurnOffBadWhitespaceForConfiguredFiletypes()
-  let l:off_filtypes = filter(copy(g:bad_whitespace_off_filetypes), 'v:val == &ft')
+  let l:off_filtypes = filter(copy(g:bad_whitespace_off_filetypes),
+              \ 'v:val == &ft')
   if !empty(l:off_filtypes)
       call s:HideBadWhitespace(1)
   endif
@@ -159,8 +169,10 @@ function! s:EraseBadWhitespace(line1,line2)
 endfunction
 
 " Run :EraseBadWhitespace to remove end of line white space.
-command! -range=% EraseBadWhitespace call <SID>EraseBadWhitespace(<line1>,<line2>)
+command! -range=% EraseBadWhitespace
+            \ call <SID>EraseBadWhitespace(<line1>,<line2>)
 command! ShowBadWhitespace call <SID>ShowBadWhitespace(1)
 command! HideBadWhitespace call <SID>HideBadWhitespace(1)
 command! ToggleBadWhitespace call <SID>ToggleBadWhitespace()
-command! SetSearchPatternToBadWhitespace let @/ = <SID>GetBadWhitespacePattern(0)
+command! SetSearchPatternToBadWhitespace
+            \ let @/ = <SID>GetBadWhitespacePattern(0)
