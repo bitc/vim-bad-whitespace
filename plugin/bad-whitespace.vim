@@ -21,26 +21,53 @@ if ! exists( "g:bad_whitespace_patch_column_width_fallback" )
     let g:bad_whitespace_patch_column_width_fallback = 0
 endif
 
+if ! exists( "g:bad_whitespace_alternative_color_filetypes" )
+    let g:bad_whitespace_alternative_color_filetypes = []
+endif
+
 if ! exists( "g:bad_whitespace_color_default" )
     highlight default BadWhitespaceDefaultState ctermbg=red guibg=red
     let g:bad_whitespace_color_default = 'BadWhitespaceDefaultState'
 endif
 
+if ! exists( "g:bad_whitespace_color_alt_default" )
+    highlight default BadWhitespaceAltDefaultState ctermbg=gray guibg=gray
+    let g:bad_whitespace_color_alt_default = 'BadWhitespaceAltDefaultState'
+endif
+
 execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
+execute 'highlight link BadWhitespaceAlternative ' . g:bad_whitespace_color_alt_default
 autocmd BufWinEnter,WinEnter,FileType * call <SID>EnableShowBadWhitespace()
+
+function! s:IsAlternativeColorFiletype()
+  let l:alt_filtypes = filter(copy(g:bad_whitespace_alternative_color_filetypes), 'v:val == &ft')
+  if empty(l:alt_filtypes)
+      return 0
+  else
+      return 1
+  endif
+endfunction
 
 function! s:ShowBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 1
   endif
   autocmd ColorScheme <buffer> execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
+  autocmd ColorScheme <buffer> execute 'highlight link BadWhitespaceAlternative ' . g:bad_whitespace_color_alt_default
   let l:whitespace_pattern_global = '/' . s:GetBadWhitespacePattern(0) . '/'
   let l:whitespace_pattern_editing = '/' . s:GetBadWhitespacePattern(1) . '/'
-  execute 'match BadWhitespace ' . l:whitespace_pattern_global
+  if s:IsAlternativeColorFiletype()
+      let l:active_colorscheme = 'BadWhitespaceAlternative'
+      match none BadWhitespace
+  else
+      let l:active_colorscheme = 'BadWhitespace'
+      match none BadWhitespaceAlternative
+  endif
+  execute 'match ' . l:active_colorscheme . ' ' . l:whitespace_pattern_global
   augroup BadWhitespace
     autocmd! * <buffer>
-    execute 'autocmd InsertLeave <buffer> match BadWhitespace ' . l:whitespace_pattern_global
-    execute 'autocmd InsertEnter <buffer> match BadWhitespace ' . l:whitespace_pattern_editing
+    execute 'autocmd InsertLeave <buffer> match ' . l:active_colorscheme . ' ' . l:whitespace_pattern_global
+    execute 'autocmd InsertEnter <buffer> match ' . l:active_colorscheme . ' ' . l:whitespace_pattern_editing
   augroup END
 endfunction
 
