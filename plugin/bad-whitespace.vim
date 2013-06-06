@@ -82,19 +82,19 @@ endfunction
 function! s:GetBadWhitespacePattern(want_editing_pattern)
   " Return the bad-whitespace pattern for the current buffer.  If
   " want_editing_pattern is nonzero return the pattern for insert mode.
-  if exists('b:bad_whitespace_buffer_pattern_prefix')
-      let l:pattern_prefix = b:bad_whitespace_buffer_pattern_prefix
+  if exists('b:bad_whitespace_buffer_specific_patterns')
+      let l:pattern_prefixes = b:bad_whitespace_buffer_specific_patterns
   else
-      let l:pattern_prefix = '\s\+'
+      let l:pattern_prefixes = ['\s\+$', '\s\+\%#\@<!$']
   endif
   if a:want_editing_pattern
-      return l:pattern_prefix . '\%#\@<!$'
+      return l:pattern_prefixes[1]
   else
-      return l:pattern_prefix . '$'
+      return l:pattern_prefixes[0]
   endif
 endfunction
 
-function! s:GetPatternPrefixForPatches()
+function! s:GetPatternsForPatches()
   let l:save_cursor = getpos(".")
   if search('^@\+', 'we')
       let l:start_colum = col('.')
@@ -105,14 +105,15 @@ function! s:GetPatternPrefixForPatches()
                   \ . g:bad_whitespace_patch_column_width_fallback
   endif
   call setpos('.', l:save_cursor)
-  return '\%' . l:start_colum . 'c.\{-\}\zs\s\+\ze'
+  let l:patch_pattern = '\%' . l:start_colum . 'c.\{-\}\zs\s\+\ze'
+  return [l:patch_pattern . '$', l:patch_pattern . '\%#\@<!$']
 endfunction
 
-function! s:SetBufferSpecificPatternPrefix()
+function! s:SetBufferSpecificPatterns()
   let l:patch_filtypes = filter(copy(g:bad_whitespace_patch_filetypes),
               \ 'v:val == &ft')
   if !empty(l:patch_filtypes)
-    let b:bad_whitespace_buffer_pattern_prefix = s:GetPatternPrefixForPatches()
+    let b:bad_whitespace_buffer_specific_patterns = s:GetPatternsForPatches()
   endif
 endfunction
 
@@ -135,7 +136,7 @@ function! s:HideBadWhitespace(force)
 endfunction
 
 function! s:EnableShowBadWhitespace()
-  call s:SetBufferSpecificPatternPrefix()
+  call s:SetBufferSpecificPatterns()
   if exists("b:bad_whitespace_show")
     return
   endif
