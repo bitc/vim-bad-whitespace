@@ -85,7 +85,9 @@ function! s:GetBadWhitespacePattern(want_editing_pattern)
   if exists('b:bad_whitespace_buffer_specific_patterns')
       let l:pattern_prefixes = b:bad_whitespace_buffer_specific_patterns
   else
-      let l:pattern_prefixes = ['\s\+$', '\s\+\%#\@<!$']
+      let l:pattern_prefixes = [
+                  \ '\_s\+\%$\|\s\+$',
+                  \ '\_s\+\%#\@<!\%$\|\s\+\%#\@<!$']
   endif
   if a:want_editing_pattern
       return l:pattern_prefixes[1]
