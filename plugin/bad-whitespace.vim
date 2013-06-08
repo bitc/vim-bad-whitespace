@@ -102,9 +102,11 @@ function! s:GetPatternsForPatches()
       let l:start_colum = col('.')
   else
       let l:start_colum = g:bad_whitespace_patch_column_width_fallback + 1
-      echomsg "bad-whitespace: could not find a sequence of @ characters. "
-                  \ . "Will use fallback +/- column width "
-                  \ . g:bad_whitespace_patch_column_width_fallback
+      if g:bad_whitespace_patch_column_width_fallback != 0
+          echomsg "bad-whitespace: No @ char match. "
+                      \ . "Will use fallback +/- column width "
+                      \ . g:bad_whitespace_patch_column_width_fallback
+      endif
   endif
   call setpos('.', l:save_cursor)
   let l:patch_pattern = '\%' . l:start_colum . 'c.\{-\}\zs\s\+\ze'
