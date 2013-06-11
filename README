@@ -1,5 +1,15 @@
 bad-whitespace - Highlights whitespace at the end of lines
 
+Features
+--------
+There are configuration options that allow you to adjust filetype-specific
+behavior of the highlighting.  You can turn the highlighting initially off, use an
+alternative (e.g. faint) color, or suppress highlighting in the +/- columns of
+patches in unified diff format.
+
+Original Note
+-------------
+
 http://www.vim.org/scripts/script.php?script_id=3735
 
 Author:  Bit Connor <bit@mutantlemon.com>
