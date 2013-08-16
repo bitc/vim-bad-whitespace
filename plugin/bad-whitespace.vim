@@ -35,6 +35,14 @@ if ! exists( "g:bad_whitespace_color_alt_default" )
     let g:bad_whitespace_color_alt_default = 'BadWhitespaceAltDefaultState'
 endif
 
+if ! exists( "g:bad_whitespace_match_priority" )
+    " The priority used for the bad-whitespace match in matchadd()
+    let g:bad_whitespace_match_priority = -20
+endif
+
+" The IDs 1-3 are reserved and therefore never used by matchadd.
+let s:InvalidMatchId = 1
+
 execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
 execute 'highlight link BadWhitespaceAlternative '
             \ . g:bad_whitespace_color_alt_default
@@ -51,6 +59,22 @@ function! s:IsAlternativeColorFiletype()
   endif
 endfunction
 
+fun! s:DeleteBadWhitespaceMatch()
+    " Delete the bad whitespace match in this window
+    if exists("w:bad_whitespace_match_id")
+                \ && w:bad_whitespace_match_id != s:InvalidMatchId
+        call matchdelete(w:bad_whitespace_match_id)
+        let w:bad_whitespace_match_id = s:InvalidMatchId
+    endif
+endfun
+
+fun! s:SetBadWhitespaceMatch(highlight_group,  whitespace_pattern)
+    " Set or update the bad whitespace match in this window
+    call s:DeleteBadWhitespaceMatch()
+    let w:bad_whitespace_match_id =  matchadd(a:highlight_group,
+                \ a:whitespace_pattern, g:bad_whitespace_match_priority)
+endfun
+
 function! s:ShowBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 1
@@ -60,22 +84,22 @@ function! s:ShowBadWhitespace(force)
   autocmd ColorScheme <buffer>
               \ execute 'highlight link BadWhitespaceAlternative '
               \ . g:bad_whitespace_color_alt_default
-  let l:whitespace_pattern_global = '/' . s:GetBadWhitespacePattern(0) . '/'
-  let l:whitespace_pattern_editing = '/' . s:GetBadWhitespacePattern(1) . '/'
+  let l:whitespace_pattern_global = s:GetBadWhitespacePattern(0)
+  let l:whitespace_pattern_editing = s:GetBadWhitespacePattern(1)
   if s:IsAlternativeColorFiletype()
       let l:active_highlight = 'BadWhitespaceAlternative'
-      match none BadWhitespace
   else
       let l:active_highlight = 'BadWhitespace'
-      match none BadWhitespaceAlternative
   endif
-  execute 'match ' . l:active_highlight . ' ' . l:whitespace_pattern_global
+  call s:SetBadWhitespaceMatch(l:active_highlight, l:whitespace_pattern_global)
   augroup BadWhitespace
     autocmd! * <buffer>
-    execute 'autocmd InsertLeave <buffer> match ' . l:active_highlight
-                \ . ' ' . l:whitespace_pattern_global
-    execute 'autocmd InsertEnter <buffer> match ' . l:active_highlight
-                \ . ' ' . l:whitespace_pattern_editing
+    execute 'autocmd InsertLeave <buffer> call <SID>SetBadWhitespaceMatch( "'
+                \ . l:active_highlight . '", '''
+                \ . l:whitespace_pattern_global . ''')'
+    execute 'autocmd InsertEnter <buffer> call <SID>SetBadWhitespaceMatch( "'
+                \ . l:active_highlight . '", '''
+                \ . l:whitespace_pattern_editing . ''')'
   augroup END
 endfunction
 
@@ -133,7 +157,7 @@ function! s:HideBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 0
   endif
-  match none BadWhitespace
+  call s:DeleteBadWhitespaceMatch()
   augroup BadWhitespace
     autocmd! * <buffer>
   augroup END
