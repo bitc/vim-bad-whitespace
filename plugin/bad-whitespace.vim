@@ -63,18 +63,18 @@ function! s:ShowBadWhitespace(force)
   let l:whitespace_pattern_global = '/' . s:GetBadWhitespacePattern(0) . '/'
   let l:whitespace_pattern_editing = '/' . s:GetBadWhitespacePattern(1) . '/'
   if s:IsAlternativeColorFiletype()
-      let l:active_colorscheme = 'BadWhitespaceAlternative'
+      let l:active_highlight = 'BadWhitespaceAlternative'
       match none BadWhitespace
   else
-      let l:active_colorscheme = 'BadWhitespace'
+      let l:active_highlight = 'BadWhitespace'
       match none BadWhitespaceAlternative
   endif
-  execute 'match ' . l:active_colorscheme . ' ' . l:whitespace_pattern_global
+  execute 'match ' . l:active_highlight . ' ' . l:whitespace_pattern_global
   augroup BadWhitespace
     autocmd! * <buffer>
-    execute 'autocmd InsertLeave <buffer> match ' . l:active_colorscheme
+    execute 'autocmd InsertLeave <buffer> match ' . l:active_highlight
                 \ . ' ' . l:whitespace_pattern_global
-    execute 'autocmd InsertEnter <buffer> match ' . l:active_colorscheme
+    execute 'autocmd InsertEnter <buffer> match ' . l:active_highlight
                 \ . ' ' . l:whitespace_pattern_editing
   augroup END
 endfunction
