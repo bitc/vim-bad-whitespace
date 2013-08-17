@@ -165,10 +165,10 @@ endfunction
 
 function! s:EnableShowBadWhitespace()
   call s:SetBufferSpecificPatterns()
-  if exists("b:bad_whitespace_show")
-    return
+  if !exists("b:bad_whitespace_show")
+      let b:bad_whitespace_show = 1
   endif
-  if &modifiable
+  if &modifiable && b:bad_whitespace_show
     call <SID>ShowBadWhitespace(0)
   else
     call <SID>HideBadWhitespace(0)
