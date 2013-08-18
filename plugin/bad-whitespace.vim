@@ -75,10 +75,8 @@ fun! s:SetBadWhitespaceMatch(highlight_group,  whitespace_pattern)
                 \ a:whitespace_pattern, g:bad_whitespace_match_priority)
 endfun
 
-function! s:ShowBadWhitespace(force)
-  if a:force
-    let b:bad_whitespace_show = 1
-  endif
+function! s:ShowBadWhitespace()
+  let b:bad_whitespace_show = 1
   autocmd ColorScheme <buffer> execute 'highlight link BadWhitespace '
               \ . g:bad_whitespace_color_default
   autocmd ColorScheme <buffer>
@@ -155,10 +153,8 @@ function! s:GetDisplayOnOffDefaultForFiletype()
   endif
 endfun
 
-function! s:HideBadWhitespace(force)
-  if a:force
-    let b:bad_whitespace_show = 0
-  endif
+function! s:HideBadWhitespace()
+  let b:bad_whitespace_show = 0
   call s:DeleteBadWhitespaceMatch()
   augroup BadWhitespace
     autocmd! * <buffer>
@@ -175,23 +171,17 @@ function! s:EnableShowBadWhitespace()
       endif
   endif
   if b:bad_whitespace_show
-    call <SID>ShowBadWhitespace(0)
+    call <SID>ShowBadWhitespace()
   else
-    call <SID>HideBadWhitespace(0)
+    call <SID>HideBadWhitespace()
   endif
 endfunction
 
 function! s:ToggleBadWhitespace()
-  if !exists("b:bad_whitespace_show")
-    let b:bad_whitespace_show = 0
-    if &modifiable
-      let b:bad_whitespace_show = 1
-    endif
-  endif
   if b:bad_whitespace_show
-    call <SID>HideBadWhitespace(1)
+    call <SID>HideBadWhitespace()
   else
-    call <SID>ShowBadWhitespace(1)
+    call <SID>ShowBadWhitespace()
   endif
 endfunction
 
@@ -205,8 +195,8 @@ endfunction
 " Run :EraseBadWhitespace to remove end of line white space.
 command! -range=% EraseBadWhitespace
             \ call <SID>EraseBadWhitespace(<line1>,<line2>)
-command! ShowBadWhitespace call <SID>ShowBadWhitespace(1)
-command! HideBadWhitespace call <SID>HideBadWhitespace(1)
+command! ShowBadWhitespace call <SID>ShowBadWhitespace()
+command! HideBadWhitespace call <SID>HideBadWhitespace()
 command! ToggleBadWhitespace call <SID>ToggleBadWhitespace()
 command! SetSearchPatternToBadWhitespace
             \ let @/ = <SID>GetBadWhitespacePattern(0)
