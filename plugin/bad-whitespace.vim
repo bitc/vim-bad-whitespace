@@ -168,9 +168,13 @@ endfunction
 function! s:EnableShowBadWhitespace()
   call s:SetBufferSpecificPatterns()
   if !exists("b:bad_whitespace_show")
-      let b:bad_whitespace_show = s:GetDisplayOnOffDefaultForFiletype()
+      if &modifiable
+          let b:bad_whitespace_show = s:GetDisplayOnOffDefaultForFiletype()
+      else
+          let b:bad_whitespace_show = 0
+      endif
   endif
-  if &modifiable && b:bad_whitespace_show
+  if b:bad_whitespace_show
     call <SID>ShowBadWhitespace(0)
   else
     call <SID>HideBadWhitespace(0)
