@@ -46,7 +46,8 @@ let s:InvalidMatchId = 1
 execute 'highlight link BadWhitespace ' . g:bad_whitespace_color_default
 execute 'highlight link BadWhitespaceAlternative '
             \ . g:bad_whitespace_color_alt_default
-autocmd BufWinEnter,WinEnter,FileType * call <SID>EnableShowBadWhitespace()
+autocmd BufWinEnter,WinEnter * call <SID>EnableShowBadWhitespace()
+autocmd FileType * call <SID>ReInitBuffer()
 
 function! s:IsAlternativeColorFiletype()
   let l:alt_filtypes = filter(
@@ -151,6 +152,13 @@ function! s:GetDisplayOnOffDefaultForFiletype()
   else
       return 0
   endif
+endfun
+
+fun! s:ReInitBuffer()
+    if exists("b:bad_whitespace_show")
+        unlet b:bad_whitespace_show
+    endif
+    call s:EnableShowBadWhitespace()
 endfun
 
 function! s:HideBadWhitespace()
