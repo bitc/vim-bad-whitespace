@@ -1,4 +1,17 @@
+**UPDATE** For a general solution take a look at:
+https://github.com/dirkwallenstein/vim-match-control
+
 bad-whitespace - Highlights whitespace at the end of lines
+
+Features
+--------
+There are configuration options that allow you to adjust filetype-specific
+behavior of the highlighting.  You can turn the highlighting initially off, use an
+alternative (e.g. faint) color, or suppress highlighting in the +/- columns of
+patches in unified diff format.
+
+Original Note
+-------------
 
 http://www.vim.org/scripts/script.php?script_id=3735
 
@@ -32,3 +45,6 @@ This plugin is better than competing plugins because it doesn't show
 highlighting in buffers that are not modifiable, which is usually what you
 want. This makes it compatible with UI buffers that happen to contain bad
 whitespace, such as the quickfix window, or the fugitive plugin.
+
+This plugin can optionally suppress highlighting in the +/- columns of a
+patch in unified diff format.

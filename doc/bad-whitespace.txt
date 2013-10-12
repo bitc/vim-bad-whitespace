@@ -51,4 +51,55 @@ Disables bad whitespace highlighting for the current buffer.
 
 Toggles bad whitespace highlighting for the current buffer.
 
+                                            *SetSearchPatternToBadWhitespace *
+
+Write the bad-whitespace pattern for the current buffer to the last search
+pattern register.  This way you can jump to an error by creating a mapping
+like this: >
+    nnoremap <Leader>W :<C-U>SetSearchPatternToBadWhitespace<CR>n
+<
+
+Configuration~                              *g:bad_whitespace_patch_filetypes*
+
+You can suppress highlighting of the +/- columns in patch filetypes, by setting
+the variable 'g:bad_whitespace_patch_filetypes'.  The column width is derived
+from the number fo '@' characters introducing the hunk header.  The given value
+in this example is the default: >
+    let g:bad_whitespace_patch_filetypes = ['diff', 'git']
+<
+
+                                *g:bad_whitespace_alternative_color_filetypes*
+
+Use the alternative color for the given filetypes.  The default is empty.
+Example: >
+    let g:bad_whitespace_alternative_color_filetypes = ['text', 'gitcommit']
+<
+
+                                              *g:bad_whitespace_off_filetypes*
+
+Initially turn off bad-whitespace highlighting for the filetypes in this list.
+Example: >
+    let g:bad_whitespace_off_filetypes = ['text', 'markdown']
+<
+
+                                              *g:bad_whitespace_color_default*
+
+Specify the name of a color to be used for bad whitespace highlighting.  The
+default uses a red background.  Example: >
+    let g:bad_whitespace_color_default = 'Error'
+<
+
+                                          *g:bad_whitespace_color_alt_default*
+
+Specify the name of a color to be used for the alternative bad whitespace
+highlighting.  The default uses a gray background.  Example: >
+    let g:bad_whitespace_color_alt_default = 'Special'
+<
+
+
+                                *g:bad_whitespace_patch_column_width_fallback*
+
+If the +/- column width could not be derived from the hunk header, this value
+will be used.  The default is 0.
+
  vim:tw=78:et:ft=help:
