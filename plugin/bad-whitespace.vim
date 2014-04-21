@@ -2,15 +2,25 @@
 " Maintainer:   Bit Connor <bit@mutantlemon.com>
 " Version:      0.3
 
+if !exists("g:bad_whitespace_show_tabs")
+    let g:bad_whitespace_show_tabs = 0
+endif
+
 function! s:ShowBadWhitespace(force)
   if a:force
     let b:bad_whitespace_show = 1
   endif
   highlight default BadWhitespace ctermbg=red guibg=red
   autocmd ColorScheme <buffer> highlight default BadWhitespace ctermbg=red guibg=red
-  match BadWhitespace /\s\+$/
-  autocmd InsertLeave <buffer> match BadWhitespace /\s\+$/
-  autocmd InsertEnter <buffer> match BadWhitespace /\s\+\%#\@<!$/
+  if g:bad_whitespace_show_tabs
+      match BadWhitespace /\s\+$\|\t\+/
+      autocmd InsertLeave <buffer> match BadWhitespace /\s\+$\|\t\+/
+      autocmd InsertEnter <buffer> match BadWhitespace /\s\+\%#\@<!$\|\t\+/
+  else
+      match BadWhitespace /\s\+$/
+      autocmd InsertLeave <buffer> match BadWhitespace /\s\+$/
+      autocmd InsertEnter <buffer> match BadWhitespace /\s\+\%#\@<!$/
+  endif
 endfunction
 
 function! s:HideBadWhitespace(force)
